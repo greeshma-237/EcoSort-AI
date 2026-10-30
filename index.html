@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSort AI - Waste Segregation Assistant</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:#f4f8f5;color:#17351f}
+header{background:#1f6b45;color:white;padding:24px;text-align:center}
+main{max-width:900px;margin:28px auto;padding:0 16px}
+.card{background:white;border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+h1,h2{margin-top:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+label{font-weight:bold;display:block;margin-bottom:8px}
+select,input,button{width:100%;padding:12px;border:1px solid #b8c8bd;border-radius:10px;font-size:16px}
+button{background:#1f6b45;color:white;border:0;font-weight:bold;cursor:pointer;margin-top:12px}
+button:hover{opacity:.9}
+.result{display:none;border-left:6px solid #1f6b45;background:#eef7f0;padding:18px;border-radius:10px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#dcefe1;font-weight:bold}
+.small{font-size:13px;color:#52665a}
+.flow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.step{padding:10px 14px;background:#e8f2eb;border-radius:10px;font-weight:bold}
+.arrow{font-weight:bold}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌱 EcoSort AI</h1>
+  <p>AI-Powered Smart Waste Segregation & Sustainability Assistant</p>
+</header>
+<main>
+  <div class="card">
+    <h2>AI Demo</h2>
+    <p class="small">This prototype demonstrates a prompt-based AI workflow. Choose a sample waste item to test the decision-support output.</p>
+    <div class="grid">
+      <div>
+        <label for="item">Waste item</label>
+        <select id="item">
+          <option value="banana">Banana peel</option>
+          <option value="bottle">Plastic water bottle</option>
+          <option value="battery">Used battery</option>
+          <option value="paper">Clean paper</option>
+          <option value="foodbox">Food-stained paper box</option>
+          <option value="phone">Old mobile phone</option>
+          <option value="glass">Glass bottle</option>
+          <option value="unknown">Unclear/unknown item</option>
+        </select>
+      </div>
+      <div>
+        <label for="question">Optional user question</label>
+        <input id="question" placeholder="e.g., Where should I put this?">
+      </div>
+    </div>
+    <button onclick="analyze()">Analyze with AI workflow</button>
+  </div>
+
+  <div id="result" class="result">
+    <h2>AI Recommendation</h2>
+    <p><span class="badge" id="category"></span></p>
+    <p id="reason"></p>
+    <p><strong>Suggested action:</strong> <span id="action"></span></p>
+    <p class="small"><strong>Confidence note:</strong> <span id="confidence"></span></p>
+  </div>
+
+  <div class="card">
+    <h2>AI Workflow</h2>
+    <div class="flow">
+      <span class="step">User input</span><span class="arrow">→</span>
+      <span class="step">Prompt + item context</span><span class="arrow">→</span>
+      <span class="step">AI classification</span><span class="arrow">→</span>
+      <span class="step">Explanation</span><span class="arrow">→</span>
+      <span class="step">Disposal guidance</span>
+    </div>
+    <p class="small">In a production version, an image-capable AI model can replace the sample-item selector and identify the waste from an uploaded image. Local municipal rules should be used as the final disposal reference.</p>
+  </div>
+
+  <div class="card">
+    <h2>Responsible AI</h2>
+    <ul>
+      <li><strong>Fairness:</strong> use varied examples and avoid assumptions from limited training examples.</li>
+      <li><strong>Transparency:</strong> explain the predicted category and provide a confidence/uncertainty note.</li>
+      <li><strong>Ethics:</strong> do not give misleading or harmful disposal instructions.</li>
+      <li><strong>Privacy:</strong> avoid collecting personal or sensitive information; minimize image retention.</li>
+    </ul>
+  </div>
+</main>
+<script>
+const data = {
+ banana:{cat:"Wet / Organic Waste",reason:"The item is biodegradable organic material.",action:"Place in the wet/organic waste stream where that system is available.",conf:"High for this sample item; local collection rules may differ."},
+ bottle:{cat:"Dry / Recyclable Waste",reason:"A clean plastic bottle is commonly handled through recyclable/dry waste systems.",action:"Empty, rinse if required locally, and place in the appropriate recyclable/dry stream.",conf:"High for this sample; check local recycling rules."},
+ battery:{cat:"Hazardous / Special Waste",reason:"Batteries can contain materials that require controlled collection.",action:"Do not mix with ordinary wet waste. Use an authorized battery/e-waste collection point.",conf:"High for this sample; follow local collection guidance."},
+ paper:{cat:"Dry / Recyclable Waste",reason:"Clean paper is generally a dry recyclable material.",action:"Keep dry and place in the appropriate paper/recyclable stream.",conf:"High for this sample; contaminated paper may be treated differently."},
+ foodbox:{cat:"Other / Local Rule Check",reason:"Food contamination can change how paper packaging is accepted.",action:"Check the local waste-management rule before disposal.",conf:"Medium because acceptance varies by collection system."},
+ phone:{cat:"E-Waste",reason:"An old mobile phone is electronic equipment and should not be mixed with normal household waste.",action:"Use an authorized e-waste collection/recycling channel.",conf:"High for this sample."},
+ glass:{cat:"Dry / Recyclable Waste",reason:"Glass containers are often collected separately or within recyclable streams depending on local rules.",action:"Follow the local glass/recyclable collection instructions.",conf:"Medium because collection systems differ."},
+ unknown:{cat:"Uncertain — Ask/Check",reason:"The item cannot be safely classified from limited information.",action:"Do not guess. Provide a clearer image or item description and check local guidance.",conf:"Low — human/local verification recommended."}
+};
+function analyze(){
+ const key=document.getElementById("item").value, d=data[key];
+ document.getElementById("category").textContent=d.cat;
+ document.getElementById("reason").textContent=d.reason;
+ document.getElementById("action").textContent=d.action;
+ document.getElementById("confidence").textContent=d.conf;
+ document.getElementById("result").style.display="block";
+}
+</script>
+</body>
+</html>
